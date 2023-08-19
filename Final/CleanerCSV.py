@@ -8,21 +8,15 @@ class CleanerCSV:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         relative_path = os.path.join(current_dir,"logs","csv")
 
-        for filename in os.listdir(f'{current_dir}/logs/txt/'):
-            try:
-                check_if_was_used = filename.split(".")[0][5:]
-                check_if_was_used = int(check_if_was_used)
-                if check_if_was_used in id_list:
-                    it_was = True
-                else:
-                    it_was = False
-            except:
-                it_was = False
-                pass
+        paths = dict()
 
-            if filename.endswith('.txt') and not filename.endswith('.gitkeep') and it_was:
+        for id in id_list:
+
+            paths.update({id: os.path.join(current_dir,"logs","txt",f"logs_{id}.txt")})
+        
+        for id, filepath in paths.items():
                 try:
-                    with open(f'{current_dir}/logs/txt/{filename}', 'r') as file:
+                    with open(filepath, 'r') as file:
                         lines = file.readlines()
                     tokens = []
                     for line in lines:
@@ -30,7 +24,7 @@ class CleanerCSV:
                             token_value = line.split(':')[1].split()[0]
                             tokens.append(token_value)
 
-                    with open(f'{relative_path}\logs_{check_if_was_used}.csv', 'w', newline='') as file:
+                    with open(f'{relative_path}\logs_{id}.csv', 'w', newline='') as file:
                         writer = csv.writer(file)
                         writer.writerow(['Tokens'])
                         writer.writerows([[token] for token in tokens])

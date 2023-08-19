@@ -81,17 +81,17 @@ class TokenBucket(threading.Thread):
                 self.Capacity = rate * size * 10
                 self.Rate = rate * size / (on_time + time_off)
                 self.Rate_p = 1 / self.Rate
-                self.Tokens = self.capacity - size
+                self.Tokens = self.Capacity - size
                 self.Stream_num += 1
+                print(f"First current added")
                 print(f"Parameters of bucket {self.ID}: rate {self.Rate}, 1/rate {self.Rate_p}, capacity {self.Capacity}")
-                self.Writer.write_log(f"First current added")
             else:
                 self.Capacity += rate * size
                 self.Rate += rate * size / (on_time + time_off)
                 self.Rate_p = 1/self.Rate
                 self.Stream_num += 1
+                print(f"New current added")
                 print(f"Parameters of updated bucket {self.ID}: rate {self.Rate}, 1/rate {self.Rate_p}, capacity {self.Capacity}")
-                self.writer.write_log(f"New current added")
         self.lock.release()
 
         
